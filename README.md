@@ -1,53 +1,69 @@
-# Claude Builders Bounty 🤖
+# Generate Changelog Tool & Skill
 
-> A community bounty board for Claude Code builders.
+> Automatically generate structured `CHANGELOG.md` files from Git commit history following Keep a Changelog standards.
 
-Building with Claude Code? Have tasks to delegate?
-Want to get paid for contributing to AI projects?
-You're in the right place.
+## Features
 
----
-
-## How it works
-
-**To post a bounty**
-1. Open a GitHub issue with a clear description and acceptance criteria
-2. Comment `/opire create $XXX` in the issue to set the reward
-3. Share the link — contributors will find it
-
-**To claim a bounty**
-1. Browse the open issues below
-2. Comment `/opire try` in the issue you want to work on
-3. Submit a PR — payment is automatic on merge ✅
+- 🏷️ **Tag-Aware**: Automatically computes commits since the most recent Git release tag.
+- 📂 **Auto-Categorization**: Groups commits by conventional commit prefixes (`feat:` → **Added**, `fix:` → **Fixed**, `refactor:`/`docs:`/`chore:` → **Changed**, `remove:` → **Removed**, `security:` → **Security**).
+- 🔄 **Safe Incremental Updates**: Prepends new versions directly under `# Changelog` preserving past releases.
+- ⚡ **Zero Dependencies**: Pure standard Python (Python 3.8+).
 
 ---
 
-## Active Bounties
+## 3-Step Setup & Usage
 
-| # | Task | Amount | Status |
-|---|------|--------|--------|
-| [#1](../../issues/1) | SKILL: Generate a CHANGELOG from git history | $50 | 🟢 Open |
-| [#2](../../issues/2) | TEMPLATE: CLAUDE.md for a Next.js + SQLite project | $75 | 🟢 Open |
-| [#3](../../issues/3) | HOOK: Block destructive bash commands in Claude Code | $100 | 🟢 Open |
-| [#4](../../issues/4) | AGENT: PR reviewer with structured Markdown output | $150 | 🟢 Open |
-| [#5](../../issues/5) | WORKFLOW: n8n + Claude API — automated weekly dev summary | $200 | 🟢 Open |
+### 1. Place in your project
+Copy `generate_changelog.py` (and `changelog.sh`) to your project root or scripts directory.
 
----
+### 2. Run
+```bash
+# Generate / update CHANGELOG.md for unreleased commits
+python generate_changelog.py
+```
 
-## Rules
-
-- Tasks must be related to Claude Code or AI tooling
-- Every issue must have clear acceptance criteria before a bounty is activated
-- Payment is handled by [Opire](https://opire.dev) (Stripe)
-- Quality over speed — a solid PR beats a fast one
+### 3. Specify release versions (Optional)
+```bash
+# Tag a new release version
+python generate_changelog.py --version "v1.2.0" --tag "v1.1.0"
+```
 
 ---
 
-## Community
+## Claude Code Skill Usage
 
-- 🐦 X: [@ClaudeBounty](https://x.com/ClaudeBounty)
-- 📧 Contact: claudebounty@gmail.com
+Add `skills/generate-changelog/SKILL.md` to your Claude Code skills directory. Claude Code will automatically invoke the skill when you ask to draft or update release notes.
 
 ---
 
-*Started by the Claude builder community · March 2026 · MIT License*
+## Sample Generated Output
+
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [v1.2.0] - 2026-03-27
+
+### Added
+- User authentication and session management (`a1b2c3d`)
+- Export data to CSV and JSON formats (`e4f5a6b`)
+
+### Fixed
+- Timeout error on slow database connections (`7c8d9e0`)
+- Mobile responsive layout padding (`1f2a3b4`)
+
+### Changed
+- Refactor authentication middleware for speed (`5d6e7f8`)
+- Update documentation and setup guide (`9a0b1c2`)
+```
+
+---
+
+## Running Tests
+
+```bash
+python -m unittest discover -s tests
+```
