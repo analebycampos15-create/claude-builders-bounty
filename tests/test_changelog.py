@@ -3,6 +3,10 @@ import shutil
 import tempfile
 import unittest
 import subprocess
+import sys
+
+# Make the skill module importable regardless of where tests run from
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "skills", "generate-changelog"))
 
 from generate_changelog import categorize_commit, build_changelog_section, generate_full_changelog
 

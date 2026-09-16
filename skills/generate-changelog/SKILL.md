@@ -11,17 +11,17 @@ Automatically inspects the repository's git commit history since the last releas
 
 ## Trigger & Usage
 
-Whenever the user or agent requests to generate, update, or preview a changelog:
+Whenever the user or agent requests to generate, update, or preview a changelog, run these commands from inside this skill's folder (or adjust paths accordingly):
 
 ```bash
 # Generate / update CHANGELOG.md for unreleased changes
-python generate_changelog.py
+cd skills/generate-changelog && python generate_changelog.py
 
 # Specify release version and tag
-python generate_changelog.py --version "v1.2.0" --tag "v1.1.0"
+cd skills/generate-changelog && python generate_changelog.py --version "v1.2.0" --tag "v1.1.0" --date "2026-09-15"
 
 # Output preview to stdout without writing file
-python generate_changelog.py --stdout
+cd skills/generate-changelog && python generate_changelog.py --stdout
 ```
 
 Or execute via bash wrapper:

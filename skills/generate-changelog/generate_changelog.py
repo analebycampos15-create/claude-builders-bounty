@@ -88,7 +88,7 @@ def get_commits_since(tag=None, cwd=None):
     """Get list of commits since tag (or all commits if tag is None)."""
     rev_range = f"{tag}..HEAD" if tag else "HEAD"
     log_output = run_git_command(
-        ["log", rev_range, '--pretty=format:%h%x09%an%x09%ad%x09%s', "--date=short"],
+        ["log", rev_range, '--pretty=format:%h%x09%an%x09%ad%x09%s', "--date=short", "--no-merges"],
         cwd=cwd
     )
     if not log_output:
@@ -169,12 +169,12 @@ def build_changelog_section(version_title, commits, release_date=None):
     return "\n".join(lines).strip() + "\n"
 
 
-def generate_full_changelog(output_path="CHANGELOG.md", version="Unreleased", since_tag=None, cwd=None):
+def generate_full_changelog(output_path="CHANGELOG.md", version="Unreleased", since_tag=None, cwd=None, release_date=None):
     """Generate or update the CHANGELOG.md file."""
     last_tag = since_tag if since_tag else get_latest_tag(cwd=cwd)
     commits = get_commits_since(tag=last_tag, cwd=cwd)
 
-    new_section = build_changelog_section(version, commits)
+    new_section = build_changelog_section(version, commits, release_date=release_date)
 
     header = """# Changelog
 
@@ -226,6 +226,9 @@ def main():
     parser.add_argument(
         "--stdout", action="store_true", help="Print changelog section to stdout instead of file"
     )
+    parser.add_argument(
+        "--date", default=None, help="Release date for the section header, YYYY-MM-DD (default: today)"
+    )
 
     args = parser.parse_args()
 
@@ -233,13 +236,13 @@ def main():
     commits = get_commits_since(tag=last_tag)
 
     if args.stdout:
-        print(build_changelog_section(args.version, commits))
+        print(build_changelog_section(args.version, commits, release_date=args.date))
         return
-
     out_file, count = generate_full_changelog(
         output_path=args.output,
         version=args.version,
-        since_tag=args.tag
+        since_tag=args.tag,
+        release_date=args.date
     )
     print(f"Successfully processed {count} commits since '{last_tag or 'initial commit'}'.")
     print(f"Updated {out_file}")
